@@ -34,7 +34,7 @@ router.patch("/delete-habit", async (req, res) => {
 });
 
 // API to get all habits
-router.get("./allhabits", async (req, res) => {
+router.get("/allhabits", async (req, res) => {
   try {
     const habits = await Habits.find({ isArchived: false });
     res.status(200).json(habits);
