@@ -13,7 +13,10 @@ router.post("/new-habit", async (req, res) => {
     const habits = await Habits.find({});
     res.status(201).json(habits);
   } catch (e) {
-    res.status(500).json({ message: "Error in creating habit", e });
+    res.status(500).json({
+      message: "Error in creating habit",
+      error: e.message,
+    });
   }
 });
 
