@@ -17,6 +17,22 @@ router.post("/new-habit", async (req, res) => {
   }
 });
 
+//API to delete an existing habit
+router.patch("/delete-habit", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const habit = await Habits.findByIdAndUpdate(
+      id,
+      { isArchived: true },
+      { new: true },
+    );
+
+    res.status(200).json(habit);
+  } catch (error) {
+    res.status(500).json({ message: "Error archiving habit", error });
+  }
+});
+
 // API to get all habits
 router.get("./allhabits", async (req, res) => {
   try {
