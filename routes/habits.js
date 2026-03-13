@@ -4,7 +4,7 @@ const Habits = require("../models/Habits");
 const router = express.Router();
 
 // API to create new habit
-router.post("/new-habit", async (req, res) => {
+router.post("/habits", async (req, res) => {
   try {
     const { title } = req.body;
     await Habits.create({
@@ -21,9 +21,9 @@ router.post("/new-habit", async (req, res) => {
 });
 
 //API to delete an existing habit
-router.patch("/delete-habit", async (req, res) => {
+router.patch("/habits/:id", async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const habit = await Habits.findByIdAndUpdate(
       id,
       { isArchived: true },
@@ -37,7 +37,7 @@ router.patch("/delete-habit", async (req, res) => {
 });
 
 // API to get all habits
-router.get("/allhabits", async (req, res) => {
+router.get("/habits", async (req, res) => {
   try {
     const habits = await Habits.find({ isArchived: false });
     res.status(200).json(habits);
