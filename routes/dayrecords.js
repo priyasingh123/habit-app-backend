@@ -19,14 +19,15 @@ router.post("/dayrecords", async (req, res) => {
       });
     }
 
-    const dayRecord = await DayRecord.create({
-      date: recordDate,
-      completed: completed || [],
-    });
-    res.status(201).json(dayRecord);
+    const dayRecord = await DayRecord.findOneAndUpdate(
+      { date: recordDate },
+      { date: recordDate, completed: completed || [] },
+      { upsert: true, new: true },
+    );
+    res.status(200).json(dayRecord);
   } catch (e) {
     res.status(500).json({
-      message: "Error in creating day record",
+      message: "Error in creating or updating day record",
       error: e.message,
     });
   }
@@ -86,39 +87,6 @@ router.get("/dayrecords/:date", async (req, res) => {
     res.status(200).json(dayRecord);
   } catch (error) {
     res.status(500).json({ message: "Error fetching day record", error });
-  }
-});
-
-// API to mark habit as completed for a given date (default today)
-router.post("/dayrecords/complete/:habitId", async (req, res) => {
-  try {
-    const { habitId } = req.params;
-    let { date } = req.body; // optional date in body
-
-    const target = date
-      ? new Date(date).toLocaleDateString("en-CA")
-      : new Date().toLocaleDateString("en-CA");
-
-    let dayRecord = await DayRecord.findOne({
-      date: target,
-    });
-
-    if (!dayRecord) {
-      dayRecord = await DayRecord.create({
-        date: target,
-        completed: [habitId],
-      });
-    } else {
-      if (!dayRecord.completed.includes(habitId)) {
-        dayRecord.completed.push(habitId);
-        await dayRecord.save();
-      }
-    }
-    res.status(200).json(dayRecord);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error marking habit as completed", error });
   }
 });
 
