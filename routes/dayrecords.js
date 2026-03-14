@@ -11,6 +11,13 @@ router.post("/dayrecords", async (req, res) => {
     const recordDate = new Date(year, month - 1, day).toLocaleDateString(
       "en-CA",
     );
+    const today = new Date();
+
+    if (today < new Date(recordDate)) {
+      return res.status(400).json({
+        message: "Cannot create record for a future date",
+      });
+    }
 
     const dayRecord = await DayRecord.create({
       date: recordDate,
@@ -36,11 +43,9 @@ router.get("/dayrecords", async (req, res) => {
       });
     }
 
-    // Create start and end dates for the month
-    const startDate = new Date(year, month - 1, 1); // month is 0-indexed in JS
-    let endDate = new Date(year, month, 1); // first day of next month
+    const startDate = new Date(year, month - 1, 1);
+    let endDate = new Date(year, month, 1);
 
-    // don't allow endDate to extend past today
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (endDate > today) {
