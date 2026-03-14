@@ -24,13 +24,9 @@ router.post("/habits", async (req, res) => {
 router.patch("/habits/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const habit = await Habits.findByIdAndUpdate(
-      id,
-      { isArchived: true },
-      { new: true },
-    );
-
-    res.status(200).json(habit);
+    await Habits.findByIdAndUpdate(id, { isArchived: true }, { new: true });
+    const habits = await Habits.find({});
+    res.status(200).json(habits);
   } catch (error) {
     res.status(500).json({ message: "Error archiving habit", error });
   }
@@ -39,7 +35,7 @@ router.patch("/habits/:id", async (req, res) => {
 // API to get all habits
 router.get("/habits", async (req, res) => {
   try {
-    const habits = await Habits.find({ isArchived: false });
+    const habits = await Habits.find({});
     res.status(200).json(habits);
   } catch (error) {
     res.status(500).json({ message: "Error fetching Habits", error });
