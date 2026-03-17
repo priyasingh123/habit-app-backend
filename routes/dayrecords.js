@@ -81,7 +81,9 @@ router.get("/dayrecords/:date", async (req, res) => {
     });
 
     if (!dayRecord) {
-      return res.status(404).json({ message: "No record found for this date" });
+      return res
+        .status(200)
+        .json({ message: "No record found for this date", completed: [] });
     }
 
     res.status(200).json(dayRecord);
