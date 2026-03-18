@@ -22,7 +22,7 @@ router.post("/dayrecords", async (req, res) => {
     const dayRecord = await DayRecord.findOneAndUpdate(
       { date: recordDate },
       { date: recordDate, completed: completed || [] },
-      { upsert: true, new: true },
+      { upsert: true, returnDocument: "after" },
     );
     res.status(200).json(dayRecord);
   } catch (e) {
