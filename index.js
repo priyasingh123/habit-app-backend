@@ -5,15 +5,15 @@ const dayRecordsRouter = require("./routes/dayrecords.js");
 const cors = require("cors");
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 app.use("/", habitsRouter);
 app.use("/", dayRecordsRouter);
 
-function startServer() {
-  connectToDB(); // first connect to DB
+async function startServer() {
+  await connectToDB(); // first connect to DB
   app.listen(port, async () => {
     // then start server
     console.log("app listening to port", port);
