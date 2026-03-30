@@ -14,7 +14,7 @@ app.use("/", dayRecordsRouter);
 
 async function startServer() {
   await connectToDB(); // first connect to DB
-  app.listen(port, async () => {
+  app.listen(port, "0.0.0.0", async () => {
     // then start server
     console.log("app listening to port", port);
   });
