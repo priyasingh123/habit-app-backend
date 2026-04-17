@@ -1,5 +1,5 @@
 const express = require("express");
-const Habits = require("../models/Habits");
+const { getHabits } = require("../services/habitService");
 
 const router = express.Router();
 
@@ -7,10 +7,7 @@ const router = express.Router();
 router.post("/habits", async (req, res) => {
   try {
     const { title } = req.body;
-    await Habits.create({
-      title,
-    });
-    const habits = await Habits.find({});
+    const habits = await addHabit(title);
     res.status(201).json(habits);
   } catch (e) {
     res.status(500).json({
@@ -25,8 +22,7 @@ router.patch("/habits/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    await Habits.findByIdAndUpdate(id, updates, { new: true });
-    const habits = await Habits.find({});
+    const habits = await updateHabit(id, updates);
     res.status(200).json(habits);
   } catch (error) {
     res.status(500).json({ message: "Error updating habit", error });
@@ -36,7 +32,7 @@ router.patch("/habits/:id", async (req, res) => {
 // API to get all habits
 router.get("/habits", async (req, res) => {
   try {
-    const habits = await Habits.find({});
+    const habits = await getHabits();
     res.status(200).json(habits);
   } catch (error) {
     res.status(500).json({ message: "Error fetching Habits", error });

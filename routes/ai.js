@@ -1,6 +1,7 @@
 const express = require("express");
 const Groq = require("groq-sdk");
 const router = express.Router();
+const { addHabit } = require("../services/habitService");
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -14,7 +15,7 @@ router.post("/coach", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: `You generate habits only. 
+          content: `You generate habits only for daily use. 
             Rules:
               - Return only a numbered list.
               - 2 to 5 items.
@@ -29,6 +30,14 @@ router.post("/coach", async (req, res) => {
         },
       ],
     });
+    const reply = chat.choices[0].message.content;
+    const habits = reply
+      .split("\n")
+      .filter((habit) => habit.trim() !== "")
+      .map((habit) => habit.replace(/^\d+\.\s*/, "").trim());
+    for (let habit of habits) {
+      await addHabit(habit);
+    }
 
     res.json({
       reply: chat.choices[0].message.content,
