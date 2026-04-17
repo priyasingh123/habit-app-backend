@@ -1,5 +1,9 @@
 const express = require("express");
-const { getHabits } = require("../services/habitService");
+const {
+  getHabits,
+  updateHabit,
+  addHabit,
+} = require("../services/habitService");
 
 const router = express.Router();
 
